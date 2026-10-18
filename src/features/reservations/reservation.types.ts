@@ -1,13 +1,14 @@
 
-import type { SERVICE_OPTIONS } from './reservation.constants'
+import type {
+  SERVICE_OPTIONS,
+  RESERVATION_STATUS_OPTIONS,
+} from './reservation.constants'
 
-export type ServiceId = (typeof SERVICE_OPTIONS)[number]['id']
+export type ServiceId =
+  (typeof SERVICE_OPTIONS)[number]['id']
 
 export type ReservationStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'completed'
-  | 'cancelled'
+  (typeof RESERVATION_STATUS_OPTIONS)[number]['value']
 
 export interface Reservation {
   id: string

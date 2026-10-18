@@ -6,10 +6,10 @@ interface StatCardProps {
 }
 
 const accentClasses = {
-  teal: 'bg-teal-50 text-teal-700',
-  blue: 'bg-blue-50 text-blue-700',
-  green: 'bg-green-50 text-green-700',
-  red: 'bg-red-50 text-red-700',
+  teal: 'bg-teal-500',
+  blue: 'bg-blue-500',
+  green: 'bg-green-500',
+  red: 'bg-red-500',
 } satisfies Record<StatCardProps['accent'], string>
 
 export default function StatCard({

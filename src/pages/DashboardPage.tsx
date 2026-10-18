@@ -1,6 +1,7 @@
 
 import StatCard from '../features/reservations/components/StatCard'
 import { useReservations } from '../features/reservations/hooks/useReservations'
+import ReservationTable from '../features/reservations/components/ReservationTable'
 
 function getLocalDateString(date: Date): string {
   const year = date.getFullYear()
@@ -48,6 +49,7 @@ export default function DashboardPage() {
       dir="rtl"
       className="min-h-screen bg-slate-50 px-4 py-8 sm:px-8 lg:px-10"
     >
+     {/* هدر داشبورد */}
       <div className="mx-auto max-w-7xl space-y-8">
         <header className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
@@ -75,6 +77,7 @@ export default function DashboardPage() {
           </button>
         </header>
 
+        {/* کارت‌های آماری */}
         <section aria-labelledby="stats-heading" className="space-y-4">
           <h2
             id="stats-heading"
@@ -94,6 +97,9 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+
+        {/* جدول رزروها */}
+        <ReservationTable reservations={reservations} />
       </div>
     </main>
   )

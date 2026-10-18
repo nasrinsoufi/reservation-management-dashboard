@@ -2,6 +2,9 @@
 import StatCard from '../features/reservations/components/StatCard'
 import { useReservations } from '../features/reservations/hooks/useReservations'
 import ReservationTable from '../features/reservations/components/ReservationTable'
+import { useMemo, useState } from 'react'
+import ReservationFilters from '../features/reservations/components/ReservationFilters'
+import type { ReservationStatus } from '../features/reservations/reservation.types'
 
 function getLocalDateString(date: Date): string {
   const year = date.getFullYear()
@@ -14,6 +17,38 @@ function getLocalDateString(date: Date): string {
 export default function DashboardPage() {
   const { reservations } = useReservations()
   const today = getLocalDateString(new Date())
+  const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState<
+    ReservationStatus | 'all'
+  >('all')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+
+  const filteredReservations = useMemo(() => {
+   const normalizedQuery = searchQuery.trim().toLocaleLowerCase()
+
+   return reservations
+    .filter((reservation) => {
+      const matchesSearch =
+        reservation.customerName
+          .toLocaleLowerCase()
+          .includes(normalizedQuery) ||
+        reservation.phone.includes(normalizedQuery)
+
+      const matchesStatus =
+        statusFilter === 'all' ||
+        reservation.status === statusFilter
+
+      return matchesSearch && matchesStatus
+    })
+    .sort((a, b) => {
+      const dateA = `${a.date}T${a.time}`
+      const dateB = `${b.date}T${b.time}`
+
+      return sortOrder === 'asc'
+        ? dateA.localeCompare(dateB)
+        : dateB.localeCompare(dateA)
+    })
+   }, [reservations, searchQuery, statusFilter, sortOrder])
 
   const stats = [
     {
@@ -97,9 +132,19 @@ export default function DashboardPage() {
             ))}
           </div>
         </section>
+         
+        {/*  نمایش نتایج فیلتر و جدول رزروها*/}
+         <ReservationFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            statusFilter={statusFilter}
+            onStatusFilterChange={setStatusFilter}
+            sortOrder={sortOrder}
+            onSortOrderChange={setSortOrder}
+        />
 
-        {/* جدول رزروها */}
-        <ReservationTable reservations={reservations} />
+         <ReservationTable reservations={filteredReservations} />
+
       </div>
     </main>
   )

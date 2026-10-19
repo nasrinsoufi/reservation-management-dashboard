@@ -21,6 +21,13 @@ const DatePicker =
 
 type NewReservation = Omit<Reservation, 'id' | 'createdAt'>
 
+type FormErrors = {
+  customerName?: string
+  phone?: string
+  date?: string
+  time?: string
+}
+
 interface ReservationFormModalProps {
   isOpen: boolean
   onClose: () => void
@@ -54,6 +61,7 @@ export default function ReservationFormModal({
   const [date, setDate] = useState(getTodayDate)
   const [time, setTime] = useState('')
   const [notes, setNotes] = useState('')
+  const [errors, setErrors] = useState<FormErrors>({})
 
   if (!isOpen) {
     return null
@@ -80,6 +88,7 @@ export default function ReservationFormModal({
   setDate(getTodayDate())
   setTime('')
   setNotes('')
+  setErrors({})
   }
 
   function handleClose() {
@@ -87,8 +96,63 @@ export default function ReservationFormModal({
    onClose()
   }
 
+    function validateForm(): FormErrors {
+        const newErrors: FormErrors = {}
+
+        const normalizedName = customerName.trim()
+        const normalizedPhone = phone.trim()
+
+        if (normalizedName.length < 2) {
+            newErrors.customerName = 'نام مشتری باید حداقل ۲ کاراکتر باشد.'
+        }
+
+        const normalizedDigits = normalizedPhone.replace(/[۰-۹٠-٩]/g, (digit) => {
+            const persianDigits = '۰۱۲۳۴۵۶۷۸۹'
+            const arabicDigits = '٠١٢٣٤٥٦٧٨٩'
+
+            const persianIndex = persianDigits.indexOf(digit)
+
+            if (persianIndex !== -1) {
+                return String(persianIndex)
+            }
+
+            return String(arabicDigits.indexOf(digit))
+        })
+
+        const phoneDigits = normalizedDigits.replace(/\D/g, '')
+
+        if (!normalizedPhone) {
+        newErrors.phone = 'وارد کردن شماره تماس الزامی است.'
+        } else if (
+        !/^[0-9۰-۹٠-٩+() -]+$/.test(normalizedPhone) ||
+        phoneDigits.length < 8 ||
+        phoneDigits.length > 15
+        ) {
+        newErrors.phone = 'شماره تماس باید بین ۸ تا ۱۵ رقم داشته باشد.'
+        }
+
+        if (!date) {
+            newErrors.date = 'انتخاب تاریخ رزرو الزامی است.'
+        } else if (date < getTodayDate()) {
+            newErrors.date = 'تاریخ رزرو نمی‌تواند در گذشته باشد.'
+        }
+
+        if (!time) {
+            newErrors.time = 'انتخاب ساعت رزرو الزامی است.'
+        }
+
+        return newErrors
+    }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    const validationErrors = validateForm()
+    setErrors(validationErrors)
+
+    if (Object.keys(validationErrors).length > 0) {
+        return
+    }
 
     onSubmit({
         customerName: customerName.trim(),
@@ -101,7 +165,7 @@ export default function ReservationFormModal({
     })
 
      resetForm()
-  }
+    }
 
   return (
     <div
@@ -141,7 +205,7 @@ export default function ReservationFormModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-5 sm:p-6">
+        <form  noValidate onSubmit={handleSubmit} className="space-y-5 p-5 sm:p-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="customer-name" className={labelClasses}>
@@ -156,10 +220,24 @@ export default function ReservationFormModal({
                 minLength={2}
                 maxLength={100}
                 value={customerName}
-                onChange={(event) => setCustomerName(event.target.value)}
+                onChange={(event) => {
+                    setCustomerName(event.target.value)
+
+                    if (errors.customerName) {
+                        setErrors((current) => ({
+                        ...current,
+                        customerName: undefined,
+                        }))
+                    }   
+                }}
                 placeholder="نام و نام خانوادگی"
                 className={inputClasses}
               />
+              {errors.customerName && (
+                <p className="mt-1.5 text-sm text-red-600" role="alert">
+                    {errors.customerName}
+                </p>
+              )}
             </div>
 
             <div>
@@ -179,10 +257,24 @@ export default function ReservationFormModal({
                 pattern="[0-9۰-۹٠-٩+() -]{8,20}"
                 title="شماره تماس را با ارقام معتبر وارد کنید."
                 value={phone}
-                onChange={(event) => setPhone(event.target.value)}
+                onChange={(event) => {
+                    setPhone(event.target.value)
+
+                    if (errors.phone) {
+                        setErrors((current) => ({
+                        ...current,
+                        phone: undefined,
+                        }))
+                    }
+                }}
                 placeholder="09123456789"
                 className={inputClasses}
               />
+              {errors.phone && (
+                <p className="mt-1.5 text-sm text-red-600" role="alert">
+                    {errors.phone}
+                </p>
+              )}
             </div>
 
             <div>
@@ -227,25 +319,38 @@ export default function ReservationFormModal({
                     calendarPosition="bottom-right"
                     onChange={(selectedDate) => {
                         if (selectedDate) {
-                            const gregorianDate = selectedDate
-                            .convert(gregorian, gregorian_en)
-                            .format('YYYY-MM-DD')
-
-                            setDate(gregorianDate)
+                            setDate(
+                            selectedDate
+                                .convert(gregorian, gregorian_en)
+                                .format('YYYY-MM-DD'),
+                            )
                         } else {
                             setDate('')
+                        }
+
+                        if (errors.date) {
+                            setErrors((current) => ({
+                            ...current,
+                            date: undefined,
+                            }))
                         }
                     }}
                     inputClass={`${inputClasses} pl-10`}
                     containerClassName="w-full"
                     placeholder="انتخاب تاریخ شمسی"
                     />
+                    {errors.date && (
+                     <p className="mt-1.5 text-sm text-red-600" role="alert">
+                         {errors.date}
+                     </p>
+                    )}
 
                     <CalendarDays
                     size={18}
                     aria-hidden="true"
                     className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
                     />
+
                 </div>
             </div>
 
@@ -260,9 +365,23 @@ export default function ReservationFormModal({
                 type="time"
                 required
                 value={time}
-                onChange={(event) => setTime(event.target.value)}
+                onChange={(event) => {
+                    setTime(event.target.value)
+
+                    if (errors.time) {
+                        setErrors((current) => ({
+                        ...current,
+                        time: undefined,
+                        }))
+                    }
+                }}
                 className={inputClasses}
               />
+              {errors.time && (
+                <p className="mt-1.5 text-sm text-red-600" role="alert">
+                    {errors.time}
+                </p>
+              )}
             </div>
 
             <div className="sm:col-span-2">

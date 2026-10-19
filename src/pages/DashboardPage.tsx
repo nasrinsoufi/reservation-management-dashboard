@@ -5,6 +5,7 @@ import ReservationTable from '../features/reservations/components/ReservationTab
 import { useMemo, useState } from 'react'
 import ReservationFilters from '../features/reservations/components/ReservationFilters'
 import type { ReservationStatus } from '../features/reservations/reservation.types'
+import ReservationFormModal from '../features/reservations/components/ReservationFormModal'
 
 function getLocalDateString(date: Date): string {
   const year = date.getFullYear()
@@ -15,13 +16,14 @@ function getLocalDateString(date: Date): string {
 }
 
 export default function DashboardPage() {
-  const { reservations } = useReservations()
+  const { reservations , addReservation  } = useReservations()
   const today = getLocalDateString(new Date())
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<
     ReservationStatus | 'all'
   >('all')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
 
   const filteredReservations = useMemo(() => {
    const normalizedQuery = searchQuery.trim().toLocaleLowerCase()
@@ -103,9 +105,8 @@ export default function DashboardPage() {
 
           <button
             type="button"
-            disabled
-            title="فرم ثبت رزرو در مرحله بعد اضافه می‌شود"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white opacity-70"
+            onClick={() => setIsReservationModalOpen(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
           >
             <span aria-hidden="true" className="text-lg">+</span>
             ثبت رزرو جدید
@@ -144,8 +145,16 @@ export default function DashboardPage() {
         />
 
          <ReservationTable reservations={filteredReservations} />
-
       </div>
+
+        <ReservationFormModal
+          isOpen={isReservationModalOpen}
+          onClose={() => setIsReservationModalOpen(false)}
+          onSubmit={(reservation) => {
+          addReservation(reservation)
+          setIsReservationModalOpen(false)
+          }}
+        />
     </main>
   )
 }

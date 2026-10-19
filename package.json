@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.3.0",
+    "lucide-react": "^1.59.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-multi-date-picker": "^4.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

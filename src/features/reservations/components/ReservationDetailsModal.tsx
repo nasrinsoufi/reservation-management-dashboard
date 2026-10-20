@@ -10,6 +10,7 @@ import type {
 interface ReservationDetailsModalProps {
   reservation: Reservation
   onClose: () => void
+  onStatusChange: (status: ReservationStatus) => void
 }
 
 const statusClasses = {
@@ -44,6 +45,7 @@ function formatDateTime(dateString: string): string {
 export default function ReservationDetailsModal({
   reservation,
   onClose,
+  onStatusChange,
 }: ReservationDetailsModalProps) {
   const service = SERVICE_OPTIONS.find(
     (option) => option.id === reservation.serviceId,
@@ -150,18 +152,41 @@ export default function ReservationDetailsModal({
 
           <div>
             <dt className="text-sm text-slate-500">
-              وضعیت رزرو
+                وضعیت فعلی
             </dt>
+
             <dd className="mt-2">
-              <span
+                <span
                 className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${
-                  statusClasses[reservation.status]
+                    statusClasses[reservation.status]
                 }`}
-              >
+                >
                 {status?.label ?? 'نامشخص'}
-              </span>
+                </span>
             </dd>
-          </div>
+
+            <label
+                htmlFor="reservation-status"
+                className="mt-4 block text-sm font-medium text-slate-700"
+            >
+                تغییر وضعیت رزرو
+            </label>
+
+            <select
+                id="reservation-status"
+                value={reservation.status}
+                onChange={(event) =>
+                onStatusChange(event.target.value as ReservationStatus)
+                }
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            >
+                {RESERVATION_STATUS_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                    {option.label}
+                </option>
+                ))}
+            </select>
+           </div>
 
           <div>
             <dt className="text-sm text-slate-500">

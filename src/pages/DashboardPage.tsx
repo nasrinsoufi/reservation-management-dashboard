@@ -15,7 +15,7 @@ function getLocalDateString(date: Date): string {
 }
 
 export default function DashboardPage() {
-  const { reservations , addReservation  } = useReservations()
+  const { reservations , addReservation ,updateReservationStatus, } = useReservations()
   const today = getLocalDateString(new Date())
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<
@@ -193,7 +193,10 @@ export default function DashboardPage() {
             onSortOrderChange={setSortOrder}
         />
 
-         <ReservationTable reservations={filteredReservations} />
+         <ReservationTable 
+         reservations={filteredReservations}
+         onStatusChange={updateReservationStatus} 
+          />
       </div>
 
         <ReservationFormModal

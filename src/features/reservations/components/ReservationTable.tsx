@@ -11,6 +11,10 @@ import type {
 
 interface ReservationTableProps {
   reservations: Reservation[]
+  onStatusChange: (
+    reservationId: string,
+    status: ReservationStatus
+  ) => void
 }
 
 const statusClasses = {
@@ -33,6 +37,7 @@ function formatPersianDate(dateString: string): string {
 
 export default function ReservationTable({
   reservations,
+  onStatusChange,
 }: ReservationTableProps) {
   const [selectedReservation, setSelectedReservation] =
   useState<Reservation | null>(null)
@@ -286,11 +291,18 @@ export default function ReservationTable({
           تعداد رزروها: {reservations.length.toLocaleString('fa-IR')}
         </div>
       </section>
-      
+
       {selectedReservation && (
         <ReservationDetailsModal
         reservation={selectedReservation}
         onClose={() => setSelectedReservation(null)}
+        onStatusChange={(status) => {
+          onStatusChange(selectedReservation.id, status)
+
+          setSelectedReservation((current) =>
+            current ? { ...current, status } : null
+          )
+         }}
         />
       )}
     </>

@@ -1,4 +1,5 @@
-
+import { useState } from 'react'
+import ReservationDetailsModal from './ReservationDetailsModal'
 import {
   SERVICE_OPTIONS,
   RESERVATION_STATUS_OPTIONS,
@@ -33,6 +34,9 @@ function formatPersianDate(dateString: string): string {
 export default function ReservationTable({
   reservations,
 }: ReservationTableProps) {
+  const [selectedReservation, setSelectedReservation] =
+  useState<Reservation | null>(null)
+
   if (reservations.length === 0) {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center">
@@ -147,6 +151,14 @@ export default function ReservationTable({
                     </dd>
                   </div>
                 </dl>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedReservation(reservation)}
+                  className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                 >
+                  مشاهده جزئیات
+                </button>
               </article>
             )
           })}
@@ -195,6 +207,10 @@ export default function ReservationTable({
 
                 <th scope="col" className="px-5 py-4">
                   وضعیت
+                </th>
+
+                <th scope="col" className="px-5 py-4">
+                  عملیات
                 </th>
               </tr>
             </thead>
@@ -249,6 +265,16 @@ export default function ReservationTable({
                         {status?.label ?? 'نامشخص'}
                       </span>
                     </td>
+
+                    <td className="whitespace-nowrap px-5 py-4">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedReservation(reservation)}
+                        className="rounded-lg px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                      >
+                        مشاهده جزئیات
+                      </button>
+                    </td>
                   </tr>
                 )
               })}
@@ -260,6 +286,13 @@ export default function ReservationTable({
           تعداد رزروها: {reservations.length.toLocaleString('fa-IR')}
         </div>
       </section>
+      
+      {selectedReservation && (
+        <ReservationDetailsModal
+        reservation={selectedReservation}
+        onClose={() => setSelectedReservation(null)}
+        />
+      )}
     </>
   )
 }

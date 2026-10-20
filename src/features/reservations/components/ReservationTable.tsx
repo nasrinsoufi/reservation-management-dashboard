@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ResetFiltersButton from '../../../components/ResetFiltersButton'
 import ReservationDetailsModal from './ReservationDetailsModal'
 import {
   SERVICE_OPTIONS,
@@ -8,9 +9,12 @@ import type {
   Reservation,
   ReservationStatus,
 } from '../reservation.types'
+import { CalendarPlus, SearchX } from 'lucide-react'
 
 interface ReservationTableProps {
   reservations: Reservation[]
+  totalReservations: number
+  onResetFilters: () => void
   onStatusChange: (
     reservationId: string,
     status: ReservationStatus
@@ -37,22 +41,46 @@ function formatPersianDate(dateString: string): string {
 
 export default function ReservationTable({
   reservations,
+  totalReservations,
   onStatusChange,
+  onResetFilters,
 }: ReservationTableProps) {
   const [selectedReservation, setSelectedReservation] =
   useState<Reservation | null>(null)
 
   if (reservations.length === 0) {
+    const hasNoReservations = totalReservations === 0
+
     return (
-      <div className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center">
-        <h3 className="text-base font-semibold text-slate-800">
-          رزروی برای نمایش وجود ندارد
+      <section
+        aria-live="polite"
+        className="rounded-2xl border border-slate-200 bg-white px-6 py-12 text-center shadow-sm"
+      >
+        <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-600">
+          {hasNoReservations ? (
+            <CalendarPlus size={26} aria-hidden="true" />
+          ) : (
+            <SearchX size={26} aria-hidden="true" />
+          )}
+        </div>
+
+        <h3 className="mt-4 text-base font-bold text-slate-900">
+          {hasNoReservations
+            ? 'هنوز رزروی ثبت نشده است'
+            : 'رزروی با این مشخصات پیدا نشد'}
         </h3>
 
-        <p className="mt-2 text-sm text-slate-500">
-          پس از ثبت رزرو، اطلاعات آن در این بخش نمایش داده می‌شود.
+        <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-slate-500">
+          {hasNoReservations
+            ? 'برای شروع، اولین رزرو را ثبت کنید تا اطلاعات آن در این بخش نمایش داده شود.'
+            : 'عبارت جست‌وجو یا فیلتر وضعیت را تغییر دهید یا فیلترها را پاک کنید.'}
         </p>
-      </div>
+      {!hasNoReservations && (
+        <div className="mx-auto mt-5 w-full max-w-xs">
+          <ResetFiltersButton onClick={onResetFilters} />
+        </div>
+      )}
+      </section>
     )
   }
 

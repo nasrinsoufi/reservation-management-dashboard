@@ -26,6 +26,11 @@ export default function DashboardPage() {
   const [successMessage, setSuccessMessage] = useState('')
   const addReservationButtonRef = useRef<HTMLButtonElement>(null)
   const wasReservationModalOpenRef = useRef(false)
+  const resetFilters = () => {
+  setSearchQuery('')
+  setStatusFilter('all')
+  setSortOrder('asc')
+}
   
   useEffect(() => {
     if (!successMessage) return
@@ -194,8 +199,10 @@ export default function DashboardPage() {
         />
 
          <ReservationTable 
-         reservations={filteredReservations}
-         onStatusChange={updateReservationStatus} 
+          reservations={filteredReservations}
+          totalReservations={reservations.length}
+          onStatusChange={updateReservationStatus} 
+          onResetFilters={resetFilters}
           />
       </div>
 

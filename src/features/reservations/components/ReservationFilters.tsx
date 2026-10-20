@@ -1,8 +1,13 @@
-
 import {
   RESERVATION_STATUS_OPTIONS,
 } from '../reservation.constants'
 import type { ReservationStatus } from '../reservation.types'
+import {
+  Search,
+  ListFilter,
+  CalendarClock,
+} from 'lucide-react'
+import ResetFiltersButton from '../../../components/ResetFiltersButton'
 
 type StatusFilter = ReservationStatus | 'all'
 type SortOrder = 'asc' | 'desc'
@@ -29,13 +34,14 @@ export default function ReservationFilters({
       aria-label="جست‌وجو و فیلتر رزروها"
       className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {/* جست‌وجو */}
         <div>
           <label
             htmlFor="reservation-search"
-            className="mb-2 block text-sm font-medium text-slate-700"
+            className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700"
           >
+          <Search size={16} className="text-brand-600" aria-hidden="true" />
             جست‌وجوی مشتری
           </label>
 
@@ -53,8 +59,9 @@ export default function ReservationFilters({
         <div>
           <label
             htmlFor="reservation-status"
-            className="mb-2 block text-sm font-medium text-slate-700"
+            className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700"
           >
+            <ListFilter size={16} className="text-brand-600" aria-hidden="true" />
             وضعیت رزرو
           </label>
 
@@ -80,8 +87,9 @@ export default function ReservationFilters({
         <div>
           <label
             htmlFor="reservation-sort"
-            className="mb-2 block text-sm font-medium text-slate-700"
+            className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700"
           >
+            <CalendarClock size={16} className="text-brand-600" aria-hidden="true" />
             مرتب‌سازی بر اساس تاریخ و ساعت
           </label>
 
@@ -97,6 +105,14 @@ export default function ReservationFilters({
             <option value="desc">دورترین رزرو ابتدا</option>
           </select>
         </div>
+        {/* پاک کردن فیلترها */}
+        <ResetFiltersButton
+          onClick={() => {
+            onSearchChange('')
+            onStatusFilterChange('all')
+            onSortOrderChange('asc')
+          }}
+        />
       </div>
     </section>
   )

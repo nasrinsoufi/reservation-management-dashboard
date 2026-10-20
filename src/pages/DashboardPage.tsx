@@ -1,7 +1,7 @@
 import StatCard from '../features/reservations/components/StatCard'
 import { useReservations } from '../features/reservations/hooks/useReservations'
 import ReservationTable from '../features/reservations/components/ReservationTable'
-import { useMemo, useState , useEffect} from 'react'
+import { useMemo, useState , useEffect, useRef} from 'react'
 import ReservationFilters from '../features/reservations/components/ReservationFilters'
 import type { ReservationStatus } from '../features/reservations/reservation.types'
 import ReservationFormModal from '../features/reservations/components/ReservationFormModal'
@@ -24,6 +24,8 @@ export default function DashboardPage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const addReservationButtonRef = useRef<HTMLButtonElement>(null)
+  const wasReservationModalOpenRef = useRef(false)
   
   useEffect(() => {
     if (!successMessage) return
@@ -92,6 +94,19 @@ export default function DashboardPage() {
     },
   ] as const
 
+  
+  useEffect(() => {
+    if (
+      wasReservationModalOpenRef.current &&
+      !isReservationModalOpen
+    ) {
+      addReservationButtonRef.current?.focus()
+    }
+
+    wasReservationModalOpenRef.current = isReservationModalOpen
+  }, [isReservationModalOpen])
+
+
   return (
     <main
       dir="rtl"
@@ -137,6 +152,7 @@ export default function DashboardPage() {
           </div>
 
           <button
+            ref={addReservationButtonRef}
             type="button"
             onClick={() => setIsReservationModalOpen(true)}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"

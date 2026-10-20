@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState,useRef, type FormEvent } from 'react'
 import DatePickerModule from 'react-multi-date-picker'
 import DateObject from 'react-date-object'
 import persian from 'react-date-object/calendars/persian'
@@ -62,6 +62,76 @@ export default function ReservationFormModal({
   const [time, setTime] = useState('')
   const [notes, setNotes] = useState('')
   const [errors, setErrors] = useState<FormErrors>({})
+  const customerNameInputRef = useRef<HTMLInputElement>(null)
+  const modalRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+      if (!isOpen) return
+
+      function handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            setCustomerName('')
+            setPhone('')
+            setServiceId(SERVICE_OPTIONS[0].id)
+            setDate(getTodayDate())
+            setTime('')
+            setNotes('')
+            setErrors({})
+            onClose()
+        }
+      }
+
+      window.addEventListener('keydown', handleKeyDown)
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
+  }, [isOpen, onClose])
+
+ 
+  useEffect(() => {
+    if (!isOpen) return
+
+    customerNameInputRef.current?.focus()
+  }, [isOpen])
+
+  
+  useEffect(() => {
+    if (!isOpen) return
+
+    function handleTabKey(event: KeyboardEvent) {
+      if (event.key !== 'Tab') return
+
+      const modal = modalRef.current
+      if (!modal) return
+
+      const focusableElements = modal.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )
+
+      const firstElement = focusableElements.item(0)
+      const lastElement = focusableElements.item(
+        focusableElements.length - 1,
+      )
+      const activeElement = document.activeElement
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault()
+        lastElement?.focus()
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault()
+        firstElement?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleTabKey)
+
+    return () => {
+      window.removeEventListener('keydown', handleTabKey)
+    }
+  }, [isOpen])
+
+
 
   if (!isOpen) {
     return null
@@ -95,6 +165,7 @@ export default function ReservationFormModal({
    resetForm()
    onClose()
   }
+
 
     function validateForm(): FormErrors {
         const newErrors: FormErrors = {}
@@ -177,6 +248,7 @@ export default function ReservationFormModal({
       }}
     >
       <section
+        ref={modalRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="reservation-form-title"
@@ -212,6 +284,7 @@ export default function ReservationFormModal({
                 نام مشتری *
               </label>
               <input
+                ref={customerNameInputRef}
                 id="customer-name"
                 name="customerName"
                 type="text"

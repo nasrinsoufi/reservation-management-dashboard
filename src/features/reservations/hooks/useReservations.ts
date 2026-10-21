@@ -1,5 +1,4 @@
-
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { MOCK_RESERVATIONS } from '../reservation.mock-data'
 import type {
@@ -9,9 +8,46 @@ import type {
 
 type NewReservation = Omit<Reservation, 'id' | 'createdAt'>
 
-export function useReservations() {
+const STORAGE_KEY = 'reservation-management-reservations'
+
+function loadReservations(): Reservation[] {
+  try {
+    const storedReservations = localStorage.getItem(STORAGE_KEY)
+
+    if (storedReservations === null) {
+      return MOCK_RESERVATIONS
+    }
+
+    const parsedReservations: unknown = JSON.parse(storedReservations)
+
+    if (!Array.isArray(parsedReservations)) {
+      return MOCK_RESERVATIONS
+    }
+
+    return parsedReservations as Reservation[]
+  } catch {
+    return MOCK_RESERVATIONS
+  }
+}
+
+export function useReservations(
+  onStorageError?: (message: string) => void,
+) {
   const [reservations, setReservations] =
-    useState<Reservation[]>(MOCK_RESERVATIONS)
+    useState<Reservation[]>(loadReservations)
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(reservations),
+      )
+    } catch {
+      onStorageError?.(
+        'ذخیره‌سازی رزروها ناموفق بود. فضای ذخیره‌سازی مرورگر را بررسی کنید.',
+      )
+    }
+  }, [reservations, onStorageError])
 
   const addReservation = (data: NewReservation) => {
     const newReservation: Reservation = {

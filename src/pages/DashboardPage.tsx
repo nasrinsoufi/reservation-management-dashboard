@@ -1,10 +1,11 @@
 import StatCard from '../features/reservations/components/StatCard'
 import { useReservations } from '../features/reservations/hooks/useReservations'
 import ReservationTable from '../features/reservations/components/ReservationTable'
-import { useMemo, useState , useEffect, useRef} from 'react'
+import { useMemo, useState , useEffect, useRef , useCallback} from 'react'
 import ReservationFilters from '../features/reservations/components/ReservationFilters'
 import type { ReservationStatus } from '../features/reservations/reservation.types'
 import ReservationFormModal from '../features/reservations/components/ReservationFormModal'
+import Toast, { type ToastType } from '../components/Toast'
 
 function getLocalDateString(date: Date): string {
   const year = date.getFullYear()
@@ -14,16 +15,62 @@ function getLocalDateString(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-export default function DashboardPage() {
-  const { reservations , addReservation ,updateReservationStatus, } = useReservations()
+  export default function DashboardPage() {
   const today = getLocalDateString(new Date())
+
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<
     ReservationStatus | 'all'
   >('all')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
+  const [toastMessage, setToastMessage] = useState('')
+  const [toastType, setToastType] = useState<ToastType>('success')
+
+  const showToast = useCallback(
+    (message: string, type: ToastType = 'success') => {
+      setToastType(type)
+      setToastMessage(message)
+    },
+    [],
+  )
+
+  const handleStorageError = useCallback(
+    (message: string) => {
+      showToast(message, 'error')
+    },
+    [showToast],
+  )
+
+  const {
+    reservations,
+    addReservation,
+    updateReservationStatus,
+  } = useReservations(handleStorageError)
+
+  const handleStatusChange = (
+    reservationId: string,
+    status: ReservationStatus,
+  ) => {
+    updateReservationStatus(reservationId, status)
+
+    const statusLabel =
+      status === 'pending'
+        ? 'در انتظار تأیید'
+        : status === 'confirmed'
+          ? 'تأییدشده'
+          : status === 'completed'
+            ? 'انجام شده'
+            : 'لغوشده'
+
+    showToast(
+      `وضعیت رزرو با موفقیت به «${statusLabel}» تغییر کرد.`,
+      'success',
+    )
+  }
+
+
+
   const addReservationButtonRef = useRef<HTMLButtonElement>(null)
   const wasReservationModalOpenRef = useRef(false)
   const resetFilters = () => {
@@ -32,17 +79,6 @@ export default function DashboardPage() {
   setSortOrder('asc')
 }
   
-  useEffect(() => {
-    if (!successMessage) return
-
-    const timeoutId = window.setTimeout(() => {
-      setSuccessMessage('')
-    }, 4000)
-
-    return () => window.clearTimeout(timeoutId)
-  }, [successMessage])
-
-
   const filteredReservations = useMemo(() => {
    const normalizedQuery = searchQuery.trim().toLocaleLowerCase()
 
@@ -118,26 +154,13 @@ export default function DashboardPage() {
       className="min-h-screen bg-slate-50 px-4 py-8 sm:px-8 lg:px-10"
     >
       
-      {successMessage && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="mb-4 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
-        >
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-bold">
-            ✓
-          </span>
-          <span>{successMessage}</span>
-          <button
-            type="button"
-            onClick={() => setSuccessMessage('')}
-            className="mr-auto rounded-md px-2 py-1 text-emerald-800 hover:bg-emerald-100"
-            aria-label="بستن پیام"
-          >
-            ×
-          </button>
-        </div>
-      )}
+      {toastMessage && (
+          <Toast
+            message={toastMessage}
+            type={toastType}
+            onClose={() => setToastMessage('')}
+          />
+       )}
 
      {/* هدر داشبورد */}
       <div className="mx-auto max-w-7xl space-y-8">
@@ -201,7 +224,7 @@ export default function DashboardPage() {
          <ReservationTable 
           reservations={filteredReservations}
           totalReservations={reservations.length}
-          onStatusChange={updateReservationStatus} 
+          onStatusChange={handleStatusChange} 
           onResetFilters={resetFilters}
           />
       </div>
@@ -212,7 +235,7 @@ export default function DashboardPage() {
           onSubmit={(reservation) => {
           addReservation(reservation)
           setIsReservationModalOpen(false)
-          setSuccessMessage('رزرو با موفقیت ثبت شد.')
+          showToast('رزرو با موفقیت ثبت شد.', 'success')
           }}
         />
     </main>

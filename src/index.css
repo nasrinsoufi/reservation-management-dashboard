@@ -4,14 +4,20 @@
 @theme {
   --font-sans: "Vazirmatn Variable", sans-serif;
 
-  --color-brand-50: #effcf9;
-  --color-brand-100: #d5f5ed;
-  --color-brand-500: #2b9b8b;
-  --color-brand-600: #217d71;
-  --color-brand-700: #1c645b;
+  /* Primary: Steel Blue */
+  --color-brand-50: #eff5fa;
+  --color-brand-100: #dce8f2;
+  --color-brand-500: #3977a8;
+  --color-brand-600: #30658f;
+  --color-brand-700: #264f70;
 
-  --color-navy-800: #1e293b;
-  --color-navy-900: #0f172a;
+  /* Navy */
+  --color-navy-800: #293548;
+  --color-navy-900: #17243f;
+
+  /* Dashboard surfaces */
+  --color-dashboard-bg: #d8e0ea;
+  --color-dashboard-card: #f8fafc;
 }
 
 :root {

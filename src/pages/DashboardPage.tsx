@@ -180,7 +180,7 @@ function getLocalDateString(date: Date): string {
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-slate-50 px-4 py-8 sm:px-8 lg:px-10"
+      className="min-h-screen bg-dashboard-bg px-4 py-8 sm:px-8 lg:px-10"
     >
       
       {toastMessage && (
@@ -191,33 +191,61 @@ function getLocalDateString(date: Date): string {
           />
        )}
 
-     {/* هدر داشبورد */}
-      <div className="mx-auto max-w-7xl space-y-8">
-        <header className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <p className="text-sm font-semibold text-brand-600">
-              پنل مدیریت
+     
+    {/* هدر داشبورد */}
+    <div className="mx-auto max-w-7xl space-y-8">
+      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-[#17243F] via-[#203451] to-[#344F70] p-6 shadow-xl shadow-slate-900/10 sm:p-8 lg:p-10">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-16 -top-20 h-56 w-56 rounded-full bg-white/5 blur-3xl"
+        />
+
+        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-4">
+            <p className="text-sm font-medium text-slate-300">
+              {(() => {
+                const now = new Date()
+                const date = new Intl.DateTimeFormat('fa-IR', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                }).format(now)
+
+                const weekday = new Intl.DateTimeFormat('fa-IR', {
+                  weekday: 'long',
+                }).format(now)
+
+                return `${weekday}، ${date}`
+              })()}
             </p>
 
-            <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-              داشبورد مدیریت رزروها
-            </h1>
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-blue-300">
+                پنل مدیریت رزروها
+              </p>
 
-            <p className="text-sm leading-7 text-slate-500">
-              رزروها، مشتریان و وضعیت خدمات را در یک نگاه مدیریت کنید.
-            </p>
+              <h1 className="text-2xl font-bold leading-relaxed text-white sm:text-3xl">
+                روز بخیر، مدیر عزیز!
+              </h1>
+
+              <p className="max-w-xl text-sm leading-7 text-slate-300 sm:text-base">
+                به پنل مدیریت خوش آمدید. رزروها و برنامه امروزتان را در یک نگاه بررسی کنید.
+              </p>
+            </div>
           </div>
 
           <button
             ref={addReservationButtonRef}
             type="button"
             onClick={() => setIsReservationModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#3977A8] px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition hover:bg-[#30658F] focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 focus:ring-offset-[#203451]"
           >
-            <span aria-hidden="true" className="text-lg">+</span>
+            <span aria-hidden="true" className="text-xl">+</span>
             ثبت رزرو جدید
           </button>
-        </header>
+        </div>
+      </header>
+
 
         {/* کارت‌های آماری */}
         <section aria-labelledby="stats-heading" className="space-y-4">

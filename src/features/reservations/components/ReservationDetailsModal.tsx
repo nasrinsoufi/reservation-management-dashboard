@@ -211,7 +211,7 @@ export default function ReservationDetailsModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="w-full rounded-xl bg-[#3977A8] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#30658F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
             بستن
           </button>

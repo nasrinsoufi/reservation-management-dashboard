@@ -188,7 +188,7 @@ export default function ReservationTable({
                 <button
                   type="button"
                   onClick={() => setSelectedReservation(reservation)}
-                  className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  className="mt-4 w-full rounded-xl bg-[#3977A8] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#30658F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3977A8]"
                  >
                   مشاهده جزئیات
                 </button>
@@ -204,19 +204,19 @@ export default function ReservationTable({
 
       {/* نمای جدول در تبلت و دسکتاپ */}
       <section className="hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm md:block">
-        <div className="border-b border-slate-200 px-5 py-4">
-          <h2 className="text-lg font-bold text-slate-900">
+        <div className="border-b border-slate-200 bg-[#EFF4F9] px-5 py-4">
+          <h2 className="text-lg font-bold text-[#17243F]">
             فهرست رزروها
           </h2>
 
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-600">
             فهرست رزروهای ثبت‌شده و وضعیت آن‌ها
           </p>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full min-w-[850px] text-right text-sm">
-            <thead className="bg-slate-50 text-xs font-semibold text-slate-500">
+            <thead className="bg-[#17243F] text-xs font-semibold text-white">
               <tr>
                 <th scope="col" className="px-5 py-4">
                   مشتری
@@ -303,7 +303,7 @@ export default function ReservationTable({
                       <button
                         type="button"
                         onClick={() => setSelectedReservation(reservation)}
-                        className="rounded-lg px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                        className="rounded-lg bg-[#3977A8] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#30658F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3977A8]"
                       >
                         مشاهده جزئیات
                       </button>

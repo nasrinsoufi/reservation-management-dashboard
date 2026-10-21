@@ -69,7 +69,7 @@ export default function Toast({
     <div
       role={styles.role}
       aria-live={type === 'error' ? 'assertive' : 'polite'}
-      className={`fixed inset-x-4 top-4 z-50 mx-auto w-auto max-w-md overflow-hidden rounded-xl border shadow-lg sm:right-6 sm:left-auto ${styles.container}`}
+      className={`fixed inset-x-4 top-4 z-[60] mx-auto w-auto max-w-md overflow-hidden rounded-xl border shadow-lg sm:right-6 sm:left-auto ${styles.container}`}
     >
       <div className="flex items-center gap-3 px-4 py-3">
         <Icon

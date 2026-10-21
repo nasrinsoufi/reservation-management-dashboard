@@ -27,6 +27,35 @@ function getLocalDateString(date: Date): string {
   const [toastMessage, setToastMessage] = useState('')
   const [toastType, setToastType] = useState<ToastType>('success')
 
+  useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (
+      event.code === 'NumpadAdd' &&
+      !event.repeat &&
+      !isReservationModalOpen
+    ) {
+      const target = event.target
+
+      if (
+        target instanceof HTMLElement &&
+        (target.isContentEditable ||
+          ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
+      ) {
+        return
+      }
+
+      event.preventDefault()
+      setIsReservationModalOpen(true)
+    }
+  }
+
+  window.addEventListener('keydown', handleKeyDown)
+
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown)
+  }
+}, [isReservationModalOpen])
+
   const showToast = useCallback(
     (message: string, type: ToastType = 'success') => {
       setToastType(type)

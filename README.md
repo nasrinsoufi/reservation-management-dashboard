@@ -1,75 +1,108 @@
-# React + TypeScript + Vite
+# داشبورد مدیریت رزروها
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+یک داشبورد واکنش‌گرا برای مدیریت رزروها که با React، TypeScript و Vite ساخته شده است. این برنامه رابطی برای مدیریت رزروها، پیگیری وضعیت آن‌ها و مشاهده آمار رزروها فراهم می‌کند.
 
-Currently, two official plugins are available:
+## ویژگی‌ها
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **نمای کلی داشبورد:** مشاهده آمار رزروها و خلاصه وضعیت‌های اصلی.
+- **مدیریت رزروها:** ثبت رزروها همراه با اعتبارسنجی فرم.
+- **جزئیات رزرو:** مشاهده اطلاعات رزرو در یک پنجره اختصاصی.
+- **مدیریت وضعیت:** به‌روزرسانی وضعیت رزروها، شامل در انتظار، تأییدشده، تکمیل‌شده و لغوشده.
+- **جستجو و فیلتر:** یافتن رزروها و فیلتر کردن نتایج نمایش‌داده‌شده.
+- **مرتب‌سازی:** سازمان‌دهی رزروها با استفاده از گزینه‌های مرتب‌سازی موجود.
+- **ذخیره‌سازی پایدار:** ذخیره اطلاعات رزروها در حافظه محلی مرورگر.
+- **طراحی واکنش‌گرا:** سازگار کردن رابط کاربری با صفحه‌نمایش‌های دسکتاپ و موبایل.
+- **اعلان‌های Toast:** نمایش بازخورد برای عملیات موفق و خطاها.
+- **دسترسی‌پذیری با صفحه‌کلید:** استفاده از کلید `Tab` برای جابه‌جایی بین عناصر قابل فوکوس، کلید `Escape` برای بستن پنجره رزرو و کلید `+` برای باز کردن فرم ثبت رزرو جدید. هنگام بسته شدن پنجره رزرو با کلید `Escape` یا پس از ثبت موفق رزرو، فوکوس به دکمه **ثبت رزرو جدید** بازمی‌گردد.
+- **چیدمان راست‌به‌چپ:** ارائه رابطی سازگار با زبان فارسی و چیدمان RTL.
 
-## React Compiler
+## فناوری‌های استفاده‌شده
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React
+- حافظه محلی مرورگر (Local Storage)
 
-## Expanding the ESLint configuration
+## شروع کار
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### پیش‌نیازها
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### نصب
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+۱. مخزن را کلون کنید:
 
+```bash
+git clone https://github.com/nasrinsoufi/reservation-management-dashboard.git
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+۲. وارد پوشه پروژه شوید:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+cd reservation-management-dashboard
 ```
+
+۳. وابستگی‌ها را نصب کنید:
+
+```bash
+npm install
+```
+
+### اجرای سرور توسعه
+
+```bash
+npm run dev
+```
+
+### ساخت نسخه Production
+
+```bash
+npm run build
+```
+
+### پیش‌نمایش نسخه Production
+
+```bash
+npm run preview
+```
+
+### اجرای ESLint
+
+```bash
+npm run lint
+```
+
+## تصاویر پروژه
+
+### داشبورد دسکتاپ
+
+![داشبورد دسکتاپ](docs/screenshots/desktop-dashboard.png)
+
+### داشبورد تبلت
+
+![داشبورد تبلت](docs/screenshots/tablet-dashboard.png)
+
+### داشبورد موبایل
+
+![داشبورد موبایل](docs/screenshots/mobile-dashboard.png)
+
+### فرم ثبت رزرو
+
+![فرم ثبت رزرو](docs/screenshots/reservation-form.JPG)
+
+### جزئیات رزرو
+
+![جزئیات رزرو](docs/screenshots/reservation-details.JPG)
+
+## مستندات فنی
+
+برای مشاهده جزئیات پیاده‌سازی و تصمیم‌های فنی اصلی، به [تصمیم‌های فنی](docs/TECHNICAL_DECISIONS.md) مراجعه کنید.
+
+## ذخیره‌سازی داده‌ها
+
+اطلاعات رزروها در حافظه محلی مرورگر ذخیره می‌شوند. این برنامه در حال حاضر از ذخیره‌سازی سمت کاربر استفاده می‌کند و به سرور بک‌اند یا پایگاه داده نیاز ندارد.
+

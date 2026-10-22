@@ -13,7 +13,6 @@ import type {
   ServiceId,
 } from '../reservation.types'
 
-// سازگاری با ساختار export کتابخانه
 const DatePicker =
   (DatePickerModule as unknown as {
     default?: typeof DatePickerModule

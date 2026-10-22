@@ -1,45 +1,42 @@
 import {
   SERVICE_OPTIONS,
   RESERVATION_STATUS_OPTIONS,
-} from '../reservation.constants'
-import type {
-  Reservation,
-  ReservationStatus,
-} from '../reservation.types'
+} from "../reservation.constants";
+import type { Reservation, ReservationStatus } from "../reservation.types";
 
 interface ReservationDetailsModalProps {
-  reservation: Reservation
-  onClose: () => void
-  onStatusChange: (status: ReservationStatus) => void
+  reservation: Reservation;
+  onClose: () => void;
+  onStatusChange: (status: ReservationStatus) => void;
 }
 
 const statusClasses = {
-  pending: 'bg-amber-50 text-amber-700 ring-amber-600/20',
-  confirmed: 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
-  completed: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  cancelled: 'bg-red-50 text-red-700 ring-red-600/20',
-} satisfies Record<ReservationStatus, string>
+  pending: "bg-amber-50 text-amber-700 ring-amber-600/20",
+  confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+  completed: "bg-blue-50 text-blue-700 ring-blue-600/20",
+  cancelled: "bg-red-50 text-red-700 ring-red-600/20",
+} satisfies Record<ReservationStatus, string>;
 
 function formatPersianDate(dateString: string): string {
-  const date = new Date(`${dateString}T12:00:00`)
+  const date = new Date(`${dateString}T12:00:00`);
 
-  return new Intl.DateTimeFormat('fa-IR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    calendar: 'persian',
-  }).format(date)
+  return new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    calendar: "persian",
+  }).format(date);
 }
 
 function formatDateTime(dateString: string): string {
-  return new Intl.DateTimeFormat('fa-IR', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    calendar: 'persian',
-  }).format(new Date(dateString))
+  return new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    calendar: "persian",
+  }).format(new Date(dateString));
 }
 
 export default function ReservationDetailsModal({
@@ -49,18 +46,18 @@ export default function ReservationDetailsModal({
 }: ReservationDetailsModalProps) {
   const service = SERVICE_OPTIONS.find(
     (option) => option.id === reservation.serviceId,
-  )
+  );
 
   const status = RESERVATION_STATUS_OPTIONS.find(
     (option) => option.value === reservation.status,
-  )
+  );
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
-          onClose()
+          onClose();
         }
       }}
     >
@@ -98,18 +95,14 @@ export default function ReservationDetailsModal({
 
         <dl className="space-y-5">
           <div>
-            <dt className="text-sm text-slate-500">
-              نام مشتری
-            </dt>
+            <dt className="text-sm text-slate-500">نام مشتری</dt>
             <dd className="mt-1 break-words font-semibold text-slate-900">
               {reservation.customerName}
             </dd>
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">
-              شماره تماس
-            </dt>
+            <dt className="text-sm text-slate-500">شماره تماس</dt>
             <dd
               dir="ltr"
               className="mt-1 text-right font-medium text-slate-800"
@@ -119,28 +112,22 @@ export default function ReservationDetailsModal({
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">
-              نوع خدمت
-            </dt>
+            <dt className="text-sm text-slate-500">نوع خدمت</dt>
             <dd className="mt-1 font-medium text-slate-800">
-              {service?.label ?? 'خدمت نامشخص'}
+              {service?.label ?? "خدمت نامشخص"}
             </dd>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <dt className="text-sm text-slate-500">
-                تاریخ رزرو
-              </dt>
+              <dt className="text-sm text-slate-500">تاریخ رزرو</dt>
               <dd className="mt-1 font-medium text-slate-800">
                 {formatPersianDate(reservation.date)}
               </dd>
             </div>
 
             <div>
-              <dt className="text-sm text-slate-500">
-                ساعت رزرو
-              </dt>
+              <dt className="text-sm text-slate-500">ساعت رزرو</dt>
               <dd
                 dir="ltr"
                 className="mt-1 text-right font-medium text-slate-800"
@@ -151,56 +138,50 @@ export default function ReservationDetailsModal({
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">
-                وضعیت فعلی
-            </dt>
+            <dt className="text-sm text-slate-500">وضعیت فعلی</dt>
 
             <dd className="mt-2">
-                <span
+              <span
                 className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${
-                    statusClasses[reservation.status]
+                  statusClasses[reservation.status]
                 }`}
-                >
-                {status?.label ?? 'نامشخص'}
-                </span>
+              >
+                {status?.label ?? "نامشخص"}
+              </span>
             </dd>
 
             <label
-                htmlFor="reservation-status"
-                className="mt-4 block text-sm font-medium text-slate-700"
+              htmlFor="reservation-status"
+              className="mt-4 block text-sm font-medium text-slate-700"
             >
-                تغییر وضعیت رزرو
+              تغییر وضعیت رزرو
             </label>
 
             <select
-                id="reservation-status"
-                value={reservation.status}
-                onChange={(event) =>
+              id="reservation-status"
+              value={reservation.status}
+              onChange={(event) =>
                 onStatusChange(event.target.value as ReservationStatus)
-                }
-                className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              }
+              className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             >
-                {RESERVATION_STATUS_OPTIONS.map((option) => (
+              {RESERVATION_STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
-                    {option.label}
+                  {option.label}
                 </option>
-                ))}
+              ))}
             </select>
-           </div>
+          </div>
 
           <div>
-            <dt className="text-sm text-slate-500">
-              توضیحات
-            </dt>
+            <dt className="text-sm text-slate-500">توضیحات</dt>
             <dd className="mt-1 whitespace-pre-wrap break-words text-sm leading-7 text-slate-700">
-              {reservation.notes?.trim() || 'توضیحاتی ثبت نشده است.'}
+              {reservation.notes?.trim() || "توضیحاتی ثبت نشده است."}
             </dd>
           </div>
 
           <div>
-            <dt className="text-sm text-slate-500">
-              زمان ثبت رزرو
-            </dt>
+            <dt className="text-sm text-slate-500">زمان ثبت رزرو</dt>
             <dd className="mt-1 text-sm text-slate-700">
               {formatDateTime(reservation.createdAt)}
             </dd>
@@ -218,5 +199,5 @@ export default function ReservationDetailsModal({
         </div>
       </section>
     </div>
-  )
+  );
 }

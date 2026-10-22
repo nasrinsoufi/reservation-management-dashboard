@@ -1,4 +1,3 @@
-
 import type { Reservation } from './reservation.types'
 
 const getDateFromToday = (offsetDays: number): string => {
